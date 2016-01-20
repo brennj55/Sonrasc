@@ -1,0 +1,3 @@
+[submodule "sonrasc-front"]
+	path = sonrasc-front
+	url = https://github.com/brennj55/sonrasc-front.git

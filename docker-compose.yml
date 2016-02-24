@@ -1,3 +1,7 @@
+################################
+#      OCR Microservices       #
+################################
+
 # Start messaging broker
 rabbitmq:
   build: ./sonrasc-image-processing/
@@ -40,3 +44,13 @@ openocr:
   ports:
     - "9292:9292"
   command: "bash /opt/open-ocr/open-ocr-httpd.sh -amqp_uri amqp://admin:test@rabbitmq/ -http_port 9292"
+
+# Frontend client.
+web:
+  build: ./sonrasc-front/
+  dockerfile: Dockerfile
+  volumes:
+    - "./sonrasc-front/:/src/"
+    - /src/node_modules
+  ports:
+    - "8080:8080"

@@ -54,3 +54,12 @@ web:
     - /src/node_modules
   ports:
     - "8080:8080"
+
+web_api:
+  build: ./sonrasc-api/
+  dockerfile: Dockerfile
+  volumes:
+    - "./sonrasc-api/:/src/"
+    - /src/node_modules
+  ports:
+    - "9922:9922"

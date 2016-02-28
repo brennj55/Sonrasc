@@ -54,6 +54,7 @@ web-front:
     - /src/node_modules
   ports:
     - "8080:8080"
+  command: "npm run start"
 
 web_api:
   build: ./sonrasc-api/
@@ -62,5 +63,6 @@ web_api:
     - "./sonrasc-api/:/src/"
     - /src/node_modules
   ports:
-    - "9922:9922"
+    - "9005:9005"
   command: "npm run start"
+    #possible issue connecting the api to front in production, hardcoded ip.

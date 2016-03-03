@@ -61,7 +61,7 @@ RUN cd $GOPATH/src/github.com/tleyden/open-ocr/cli-httpd && go build -v -o open-
 # build open-ocr-worker binary and copy it to /usr/bin
 RUN cd $GOPATH/src/github.com/tleyden/open-ocr/cli-worker && go build -v -o open-ocr-worker && cp open-ocr-worker /usr/bin
 
-ADD ./scripts/* /opt/open-ocr/
+ADD ./scripts/ /opt/open-ocr/
 RUN chmod +x /opt/open-ocr/open-ocr-worker.sh
 RUN chmod +x /opt/open-ocr/open-ocr-httpd.sh
 RUN cd /opt/open-ocr/

@@ -43,6 +43,7 @@ openocr:
 web-front:
   build: ./sonrasc-front/
   dockerfile: Dockerfile
+  dns: ["8.8.8.8"]
   volumes:
     - "./sonrasc-front/:/src/"
     - /src/node_modules
@@ -50,11 +51,12 @@ web-front:
     - "8080:8080"
   command: "npm run start"
 
-web_api:
+web-api:
   build: ./sonrasc-api/
   dockerfile: Dockerfile
+  dns: ["8.8.8.8"]
   volumes:
-#    - "./sonrasc-api/:/src/"
+    - "./sonrasc-api/:/src/"
     - /src/node_modules
   ports:
     - "9005:9005"

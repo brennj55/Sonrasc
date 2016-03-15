@@ -62,3 +62,13 @@ web-api:
     - "9005:9005"
   command: "npm run start"
     #possible issue connecting the api to front in production, hardcoded ip.
+
+language-processing:
+  build: ./sonrasc-language-processing/
+  dockerfile: Dockerfile
+  dns: ["8.8.8.8"]
+  ports:
+    - "9080:9080"
+  volumes:
+    - "./sonrasc-language-processing/:/src/"
+  command: "npm run start"

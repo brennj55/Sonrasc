@@ -1,6 +1,8 @@
 import parseDate from './src/parseDate.js';
 import parseAddress from './src/parseAddress.js';
 import parseItem from './src/parseItem.js';
+import parsePrice from './src/parsePrice.js';
+import parseQuantity from './src/parseQuantity.js';
 
 let express = require('express');
 let bodyParser = require('body-parser');
@@ -15,25 +17,19 @@ app.post('/date', function (req, res) {
   res.json({answer: date});
 });
 
-// app.post('/item', function (req, res) {
-//   if (req.body.type !== 'item') res.status(400).send(TYPE_ERROR);
-//   let item = parseItem(req.body.data);
-//   res.json({answer: item});
-// });
-
 app.post('/item/:id/name', function (req, res) {
   let item = parseItem(req.body.data);
   res.json({answer: item});
 });
 
 app.post('/item/:id/price', function (req, res) {
-  let item = parseItem(req.body.data);
-  res.json({answer: item});
+  let price = parsePrice(req.body.data);
+  res.json({answer: price});
 });
 
 app.post('/item/:id/quantity', function (req, res) {
-  let item = parseItem(req.body.data);
-  res.json({answer: item});
+  let qty = parseQuantity(req.body.data);
+  res.json({answer: qty});
 });
 
 app.post('/item/:id/vat', function (req, res) {

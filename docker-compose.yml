@@ -51,12 +51,12 @@ web-front:
     - "8080:8080"
   command: "npm run start"
 
-web-api:
-  build: ./sonrasc-api/
+web-ocr-api:
+  build: ./sonrasc-ocr-api/
   dockerfile: Dockerfile
   dns: ["8.8.8.8"]
   volumes:
-    - "./sonrasc-api/:/src/"
+    - "./sonrasc-ocr-api/:/src/"
     - /src/node_modules
   ports:
     - "9005:9005"

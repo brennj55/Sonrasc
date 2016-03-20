@@ -39,7 +39,9 @@ openocr:
     - "9292:9292"
   command: "bash /opt/open-ocr/open-ocr-httpd.sh -amqp_uri amqp://admin:test@rabbitmq/ -http_port 9292"
 
-# Frontend client.
+################################
+#    Front-end Microservices   #
+################################
 web-front:
   build: ./sonrasc-front/
   dockerfile: Dockerfile
@@ -49,6 +51,8 @@ web-front:
     - /src/node_modules
   ports:
     - "8080:8080"
+  links:
+    - web-ocr-api
   command: "npm run start"
 
 web-ocr-api:
@@ -60,8 +64,10 @@ web-ocr-api:
     - /src/node_modules
   ports:
     - "9005:9005"
+  links:
+    - openocr
+    - language-processing
   command: "npm run start"
-    #possible issue connecting the api to front in production, hardcoded ip.
 
 language-processing:
   build: ./sonrasc-language-processing/
@@ -72,3 +78,13 @@ language-processing:
   volumes:
     - "./sonrasc-language-processing/:/src/"
   command: "npm run start"
+
+db-api:
+  build: ./sonrasc-db-api/
+  dockerfile: Dockerfile
+  dns: ["8.8.8.8"]
+  ports:
+    - "7004:7004"
+  volumes:
+    - "./sonrasc-db-api/:/src/"
+    

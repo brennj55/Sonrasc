@@ -1,6 +1,6 @@
 [submodule "sonrasc-front"]
 	path = sonrasc-front
 	url = https://github.com/brennj55/sonrasc-front.git
-[submodule "sonrasc-api"]
-		path = sonrasc-api
-		url = https://github.com/brennj55/sonrasc-api.git
+[submodule "sonrasc-ocr-api"]
+	path = sonrasc-ocr-api
+	url = https://github.com/brennj55/sonrasc-ocr-api.git

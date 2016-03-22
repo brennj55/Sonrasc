@@ -8,4 +8,4 @@ RUN npm install webpack -g \
                 gulp -g \
                 nodemon -g
 WORKDIR /src
-EXPOSE 9005
+EXPOSE 7004

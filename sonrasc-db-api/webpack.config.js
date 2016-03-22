@@ -18,7 +18,7 @@ module.exports = [
   watch: true,
   name: 'dev-build',
   target: 'node',
-  entry: './src/server.js',
+  entry: './src/start.js',
   output: {
     path: __dirname,
     filename: './build/bundle.js',
@@ -47,7 +47,7 @@ module.exports = [
     ]
   },
   devServer: {
-    port: 8090,
+    port: 7004,
     host: "0.0.0.0"
   }
 }];

@@ -53,6 +53,7 @@ web-front:
     - "8080:8080"
   links:
     - web-ocr-api
+    - db-api
   command: "npm run start"
 
 web-ocr-api:
@@ -67,6 +68,7 @@ web-ocr-api:
   links:
     - openocr
     - language-processing
+    - db-api
   command: "npm run start"
 
 language-processing:
@@ -83,8 +85,13 @@ db-api:
   build: ./sonrasc-db-api/
   dockerfile: Dockerfile
   dns: ["8.8.8.8"]
+  links:
+    - db
   ports:
     - "7004:7004"
   volumes:
     - "./sonrasc-db-api/:/src/"
-    
+  command: "npm run start"
+
+db:
+  image: mongo:3.2.4

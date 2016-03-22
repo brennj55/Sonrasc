@@ -79,6 +79,7 @@ language-processing:
     - "9080:9080"
   volumes:
     - "./sonrasc-language-processing/:/src/"
+    - /src/node_modules
   command: "npm run start"
 
 db-api:
@@ -91,6 +92,7 @@ db-api:
     - "7004:7004"
   volumes:
     - "./sonrasc-db-api/:/src/"
+    - /src/node_modules
   command: "npm run start"
 
 db:

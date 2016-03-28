@@ -1,6 +1,7 @@
-import { Schema } from 'mongoose';
+let mongoose = require('mongoose');
 import ItemSchema from './Item.js';
 import BoundarySchema from './Boundary.js';
+let Schema = mongoose.Schema;
 
 const invoiceSchema = new Schema({
   image: String,
@@ -18,3 +19,4 @@ invoiceSchema.methods.findAllInvoicesFromBusiness = (cb) => {
 };
 
 let Invoice = mongoose.model('Invoice', invoiceSchema);
+export default Invoice;

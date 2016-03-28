@@ -1,22 +1,15 @@
-var express = require('express');
-var app = express();
-//var server = require('http').Server(app);
-//var io = require('socket.io')(server);
+import express from 'express';
+import Invoice from './models/Invoice';
+let mongoose = require('mongoose');
+let bodyParser = require('body-parser');
 
-// server.listen(7004, () => {
-//   console.log("Listening on port 7004 for data..!");
-// });
-//
-// io.on('connection', (socket) => {
-//   console.log("User connected on DB API! <3");
-//
-//   socket.on('form-submit', formData => {
-//     console.log(formData);
-//   });
-// });
+mongoose.connect('mongodb://db:27017/db');
+const app = express();
 
-var port = 7004;
-var router = express.Router();
+app.use(bodyParser.json({ limit: '5mb' }));
+
+let port = 7004;
+let router = express.Router();
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -25,7 +18,31 @@ app.use(function(req, res, next) {
 });
 
 router.get('/', (req, res) => {
-  res.json({ message: 'LOL.' });
+  res.json({ message: 'Boom gurl!' });
+});
+
+let invoicesRoute = router.route('/invoices');
+invoicesRoute.post((req, res) => {
+  let invoice = new Invoice();
+
+  invoice.image = req.body.image;
+  invoice.business = req.body.form.business;
+  invoice.date = req.body.form.date;
+  invoice.address = req.body.form.address;
+  invoice.items = req.body.items;
+
+  invoice.save((err) => {
+    if (err) res.send(err);
+    res.json({message: 'Invoice saved to database!', data: invoice});
+  });
+
+});
+
+invoicesRoute.get((req, res) => {
+  Invoice.find((err, invoices) => {
+    if (err) res.send(err);
+    res.json(invoices);
+  });
 });
 
 app.use('/api', router);

@@ -1,4 +1,5 @@
-import { Schema } from 'mongoose';
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
 const BoundarySchema = new Schema({
   height: Number,

@@ -21,6 +21,13 @@ router.get('/', (req, res) => {
   res.json({ message: 'Boom gurl!' });
 });
 
+let businessesRoute = router.route('/businesses');
+businessesRoute.get((req, res) => {
+  Invoice.find().distinct('business', (error, businesses) => {
+    res.json({ payload: businesses });
+  });
+});
+
 let invoicesRoute = router.route('/invoices');
 invoicesRoute.post((req, res) => {
   let invoice = new Invoice();

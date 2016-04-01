@@ -11,7 +11,7 @@ app.use(bodyParser.json({ limit: '5mb' }));
 let port = 7004;
 let router = express.Router();
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -40,6 +40,8 @@ invoicesRoute.post((req, res) => {
 
   invoice.save((err) => {
     if (err) res.send(err);
+
+    Invoice.insertIntoBusinessesArray(invoice);
     res.json({message: 'Invoice saved to database!', data: invoice});
   });
 
@@ -55,3 +57,8 @@ invoicesRoute.get((req, res) => {
 app.use('/api', router);
 app.listen(port);
 console.log("Listening?");
+
+
+const addToBusinesses = (invoice) => {
+
+};

@@ -1,5 +1,6 @@
 import express from 'express';
 import Invoice from './models/Invoice';
+import Business from './models/Business';
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
 
@@ -23,7 +24,8 @@ router.get('/', (req, res) => {
 
 let businessesRoute = router.route('/businesses');
 businessesRoute.get((req, res) => {
-  Invoice.find().distinct('business', (error, businesses) => {
+  Business.find().select('business _id').exec((error, businesses) => {
+    console.log(businesses);
     res.json({ payload: businesses });
   });
 });
@@ -56,9 +58,4 @@ invoicesRoute.get((req, res) => {
 
 app.use('/api', router);
 app.listen(port);
-console.log("Listening?");
-
-
-const addToBusinesses = (invoice) => {
-
-};
+console.log("Listening for Database API calls.");

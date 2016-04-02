@@ -14,7 +14,7 @@ const invoiceSchema = new Schema({
   items: [ItemSchema],
   totalCost: Number
 }, {
-  timestamps: { createdAt: 'created_at '}
+  timestamps: { createdAt: 'created_at' }
 });
 
 invoiceSchema.methods.findAllInvoicesFromBusiness = (cb) => {

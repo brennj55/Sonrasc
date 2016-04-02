@@ -18,17 +18,22 @@ app.use((req, res, next) => {
   next();
 });
 
-router.get('/', (req, res) => {
-  res.json({ message: 'Boom gurl!' });
-});
-
 let businessesRoute = router.route('/businesses');
 businessesRoute.get((req, res) => {
   Business.find().select('business _id').exec((error, businesses) => {
-    console.log(businesses);
     res.json({ payload: businesses });
   });
 });
+
+let businessIDRoute = router.route('/businesses/:id');
+businessIDRoute.get((req, res) => {
+  let id = req.params.id;
+
+  Business.findOne({ _id: id }).select('invoices').populate('invoices').exec((error, business) => {
+    res.json({ cool: business});
+  });
+
+})
 
 let invoicesRoute = router.route('/invoices');
 invoicesRoute.post((req, res) => {

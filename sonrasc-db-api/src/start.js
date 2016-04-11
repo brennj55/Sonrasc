@@ -1,6 +1,7 @@
 import express from 'express';
-import Invoice from './models/Invoice';
-import Business from './models/Business';
+import BusinessController from './controllers/BusinessController';
+import InvoiceController from './controllers/InvoiceController';
+
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
 
@@ -14,53 +15,26 @@ let router = express.Router();
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 
 let businessesRoute = router.route('/businesses');
-businessesRoute.get((req, res) => {
-  Business.find().select('business _id').exec((error, businesses) => {
-    res.json({ payload: businesses });
-  });
-});
+businessesRoute.get(BusinessController.getBusinesses);
 
 let businessIDRoute = router.route('/businesses/:id');
-businessIDRoute.get((req, res) => {
-  let id = req.params.id;
-
-  Business.findOne({ _id: id }).select('invoices').populate('invoices').exec((error, business) => {
-    res.json({ cool: business});
-  });
-
-})
+businessIDRoute.get(BusinessController.getSingleBusiness);
 
 let invoicesRoute = router.route('/invoices');
-invoicesRoute.post((req, res) => {
-  let invoice = new Invoice();
+invoicesRoute.post(InvoiceController.uploadInvoice);
+invoicesRoute.get(InvoiceController.getInvoices);
 
-  invoice.image = req.body.image;
-  invoice.business = req.body.form.business;
-  invoice.date = req.body.form.date;
-  invoice.address = req.body.form.address;
-  invoice.items = req.body.items;
-
-  invoice.save((err) => {
-    if (err) res.send(err);
-
-    Invoice.insertIntoBusinessesArray(invoice);
-    res.json({message: 'Invoice saved to database!', data: invoice});
-  });
-
-});
-
-invoicesRoute.get((req, res) => {
-  Invoice.find((err, invoices) => {
-    if (err) res.send(err);
-    res.json(invoices);
-  });
-});
+let invoiceRoute = router.route('/invoices/:id')
+invoiceRoute.get(InvoiceController.findInvoice);
 
 app.use('/api', router);
 app.listen(port);
-console.log("Listening for Database API calls.");
+console.log("🌎 Listening for Database API calls!");

@@ -22,18 +22,18 @@ app.use((req, res, next) => {
   next();
 });
 
-let businessesRoute = router.route('/businesses');
-businessesRoute.get(BusinessController.getBusinesses);
+router.route('/businesses')
+  .get(BusinessController.getBusinesses);
 
-let businessIDRoute = router.route('/businesses/:id');
-businessIDRoute.get(BusinessController.getSingleBusiness);
+router.route('/businesses/:id')
+  .get(BusinessController.getSingleBusiness);
 
-let invoicesRoute = router.route('/invoices');
-invoicesRoute.post(InvoiceController.uploadInvoice);
-invoicesRoute.get(InvoiceController.getInvoices);
+router.route('/invoices')
+  .post(InvoiceController.uploadInvoice)
+  .get(InvoiceController.getInvoices);
 
-let invoiceRoute = router.route('/invoices/:id')
-invoiceRoute.get(InvoiceController.findInvoice);
+router.route('/invoices/:id')
+  .get(InvoiceController.findInvoice);
 
 app.use('/api', router);
 app.listen(port);

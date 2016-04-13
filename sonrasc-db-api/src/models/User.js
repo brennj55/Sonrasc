@@ -8,6 +8,21 @@ const UserSchema = new Schema({
     unique: true,
     required: true
   },
+  business: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  firstName: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  lastName: {
+    type: String,
+    unique: true,
+    required: true
+  },
   password: {
     type: String,
     required: true

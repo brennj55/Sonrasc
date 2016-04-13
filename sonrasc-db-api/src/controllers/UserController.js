@@ -4,7 +4,10 @@ const postUsers = function(req, res) {
   console.log(req.body.username, req.body.password);
   let user = new User({
     username: req.body.username,
-    password: req.body.password
+    password: req.body.password,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    business: req.body.business
   });
 
   console.log(user);

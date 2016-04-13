@@ -4,7 +4,8 @@ const getBusinesses = (req, res) => {
   Business.find()
     .select('business _id')
     .exec((error, businesses) => {
-    res.json({ payload: businesses });
+      if (error) res.send(error);
+      res.json({ payload: businesses });
   });
 }
 
@@ -15,7 +16,8 @@ const getSingleBusiness = (req, res) => {
     .select('invoices')
     .populate('invoices')
     .exec((error, business) => {
-    res.json({ cool: business});
+      if (error) res.send(error);
+      res.json({ business });
   });
 };
 

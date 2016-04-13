@@ -14,7 +14,7 @@ const UserSchema = new Schema({
   }
 });
 
-UserSchema.pre('save', callback => {
+UserSchema.pre('save', function(callback) {
   let user = this;
   if (!user.isModified('password')) return callback();
 
@@ -23,6 +23,7 @@ UserSchema.pre('save', callback => {
     bcrypt.hash(user.password, salt, null, (hashError, hash) => {
       if (hashError) return callback(hashError);
       user.password = hash;
+      console.log(user);
       callback();
     });
   });
@@ -36,4 +37,4 @@ UserSchema.methods.verifyPassword = (password, callback) => {
 };
 
 let User = mongoose.model('User', UserSchema);
-export default UserSchema;
+export default User;

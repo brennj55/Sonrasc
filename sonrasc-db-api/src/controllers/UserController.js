@@ -1,23 +1,7 @@
 import User from '../models/User';
 
 const postUsers = function(req, res) {
-  console.log(req.body.username, req.body.password);
-  let user = new User({
-    username: req.body.username,
-    password: req.body.password,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    business: req.body.business
-  });
 
-  console.log(user);
-
-  user.save(function(err) {
-    if (err) res.send(err);
-    res.json({
-      message: "New admin user added to database."
-    });
-  });
 };
 
 const getUsers = (req, res) => {

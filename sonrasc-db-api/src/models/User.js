@@ -15,13 +15,14 @@ const UserSchema = new Schema({
   },
   firstName: {
     type: String,
-    unique: true,
     required: true
   },
   lastName: {
     type: String,
-    unique: true,
     required: true
+  },
+  isAdmin: {
+    type: Boolean
   },
   password: {
     type: String,
@@ -29,26 +30,31 @@ const UserSchema = new Schema({
   }
 });
 
-UserSchema.pre('save', function(callback) {
-  let user = this;
-  if (!user.isModified('password')) return callback();
+UserSchema.methods.generateHash = (password) => {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
 
-  bcrypt.genSalt(5, (err, salt) => {
-    if (err) return callback(err);
-    bcrypt.hash(user.password, salt, null, (hashError, hash) => {
-      if (hashError) return callback(hashError);
-      user.password = hash;
-      console.log(user);
-      callback();
-    });
+UserSchema.methods.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.local.password);
+};
+
+UserSchema.statics.createUser = (req, callback) => {
+  let user = new User({
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    business: req.body.business,
+    isAdmin: true
   });
-});
 
-UserSchema.methods.verifyPassword = (password, callback) => {
-  bcrypt.compare(password, this.password, (err, isMatch) => {
-    if (err) return callback(err);
-    callback(null, isMatch);
-  })
+  user.password = user.generateHash(req.body.password);
+
+  console.log(user);
+
+  user.save(function(err) {
+    if (err) res.send(err);
+    return callback(null, user);
+  });
 };
 
 let User = mongoose.model('User', UserSchema);

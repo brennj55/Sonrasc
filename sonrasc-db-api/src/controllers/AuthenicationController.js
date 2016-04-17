@@ -1,24 +1,44 @@
 import Passport from 'passport';
-import { BasicStrategy } from 'passport-http';
+import LocalStrategy from 'passport-local';
 import User from '../models/User';
 
-Passport.use(new BasicStrategy(
-  (username, password, callback) => {
-    User.findOne({ username }, (usernameError, user) => {
+Passport.serializeUser((user, done) => done(null, user.id));
+
+Passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => done(err, user));
+});
+
+const findUser = (req, username, password, callback) => {
+  return User.findOne({ username }, (usernameError, user) => {
       if (usernameError) return callback(usernameError);
-      if (!user) return callback(null, false);
+      if (user) return callback(null, false);
+      else return User.createUser(req, callback);
+    }
+  );
+};
 
-      user.verifyPassword(password, (passwordError, isMatch) => {
-        if (passwordError) return callback(passwordError);
-        if (!isMatch) return callback(null, false);
-        return callback(null, user);
-      });
+const loginUser = (req, username, password, callback) => {
+  User.findOne({ username }, (err, user) => {
+    if (err) return callback(err);
+    if (!user) return callback(null, false);
+    if (!user.validPassword(password)) return callback(null, false);
+    return callback(null, user);
+  })
+};
 
-    });
-  }
+Passport.use('local-signup', new LocalStrategy({ passReqToCallback: true },
+  (req, username, password, callback) => process.nextTick(() => findUser(req, username, password, callback))
 ));
 
-const isAuthenticated = Passport.authenticate('basic', { session: true });
+Passport.use('local-login', new LocalStrategy({ passReqToCallback: true },
+  (req, username, password, callback) => process.nextTick(() => loginUser(req, username, password, callback))
+));
+
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) return next();
+  res.redirect('/');
+};
+
 export default {
   isAuthenticated
 };

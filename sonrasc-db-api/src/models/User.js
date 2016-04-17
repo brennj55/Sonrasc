@@ -35,7 +35,7 @@ UserSchema.methods.generateHash = (password) => {
 };
 
 UserSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.local.password);
+    return bcrypt.compareSync(password, this.password);
 };
 
 UserSchema.statics.createUser = (req, callback) => {

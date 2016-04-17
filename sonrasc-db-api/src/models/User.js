@@ -49,8 +49,6 @@ UserSchema.statics.createUser = (req, callback) => {
 
   user.password = user.generateHash(req.body.password);
 
-  console.log(user);
-
   user.save(function(err) {
     if (err) res.send(err);
     return callback(null, user);

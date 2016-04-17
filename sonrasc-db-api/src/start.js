@@ -15,6 +15,7 @@ mongoose.connect('mongodb://db:27017/db');
 const app = express();
 
 app.use(cookieParser());
+app.use(bodyParser());
 app.use(bodyParser.json({ limit: '5mb' }));
 
 app.use(session({ secret: "Sonrascrocks!" }));
@@ -28,7 +29,7 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Origin', "http://192.168.99.100:8080");
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-AUTHENTICATION, X-IP, Content-Type, Accept');
   if ('OPTIONS' == req.method) {
        res.sendStatus(200);
    } else {
@@ -44,28 +45,41 @@ router.route('/businesses/:id')
 
 router.route('/invoices')
   .post(AuthenicationController.isAuthenticated, InvoiceController.uploadInvoice)
-  .get(isLoggedIn, InvoiceController.getInvoices);
+  .get(AuthenicationController.isAuthenticated, InvoiceController.getInvoices);
 
 router.route('/invoices/:id')
   .get(AuthenicationController.isAuthenticated, InvoiceController.findInvoice);
 
 router.route('/register')
-  .post(Passport.authenticate('local-signup'), (req, res) => {
-    if (res) res.json({ success: true });
-  });
+  .post(function(req, res, next) {
+    Passport.authenticate('local-signup', function(err, user, info) {
+      if (err) { return next(err); }
+      if (!user) { return res.send({success:false, message:info.message}); }
+      req.logIn(user, function(err) {
+        if (err) { return next(err); }
+        return res.send({success:true, message:"register successful.", user:user});
+      });
+    })(req, res, next);
+});
+  //.post(Passport.authenticate('local-signup'), (req, res) => {
+  //  if (res) res.json({ success: true, session: res.sessionID });
+  //});
 
 router.route('/login')
-  .post(Passport.authenticate('local-login'), (req, res) => {
-    if (res) res.json({ success: true});
-  });
-
-function isLoggedIn(req, res, next) {
-  console.log("hello?");
-  console.log(req.cookies);
-  if (req.isAuthenticated()) return next();
-
-  res.redirect('/');
-}
+  .post(function(req, res, next) {
+    Passport.authenticate('local-login', function(err, user, info) {
+      if (err) { return next(err); }
+      if (!user) { return res.send({success:false, message:info.message}); }
+      req.logIn(user, function(err) {
+        if (err) { return next(err); }
+        return res.send({success:true, message:"Login successful.", user:user});
+      });
+    })(req, res, next);
+});
+  // .post(Passport.authenticate('local-login'), (req, res) => {
+  //   console.log(req.user, req.session, 'wtf...');
+  //   if (res) res.json({ success: true, user: req.user });
+  // });
 
 app.use('/api', router);
 app.listen(port);

@@ -8,13 +8,14 @@ Passport.serializeUser(function(user, done) {
 
   // used to deserialize the user
 Passport.deserializeUser(function(id, done) {
+  console.log(id, "in id of deserails a user");
   User.findById(id, function(err, user) {
     done(err, user);
   });
 });
 
-const findUser = (req, username, password, callback) => {
-  return User.findOne({ username }, (usernameError, user) => {
+const registerUser = (req, username, password, callback) => {
+  User.findOne({ username }, (usernameError, user) => {
       if (usernameError) return callback(usernameError);
       if (user) return callback(null, false);
       else return User.createUser(req, callback);
@@ -23,7 +24,6 @@ const findUser = (req, username, password, callback) => {
 };
 
 const loginUser = (req, username, password, callback) => {
-  console.log(req.sessionID);
   User.findOne({ username }, (err, user) => {
     if (err) return callback(err);
     if (!user) return callback(null, false);
@@ -33,7 +33,7 @@ const loginUser = (req, username, password, callback) => {
 };
 
 Passport.use('local-signup', new LocalStrategy({ passReqToCallback: true },
-  (req, username, password, callback) => process.nextTick(() => findUser(req, username, password, callback))
+  (req, username, password, callback) => process.nextTick(() => registerUser(req, username, password, callback))
 ));
 
 Passport.use('local-login', new LocalStrategy({ passReqToCallback: true },
@@ -41,6 +41,7 @@ Passport.use('local-login', new LocalStrategy({ passReqToCallback: true },
 ));
 
 const isAuthenticated = (req, res, next) => {
+  console.log(req.session);
   if (req.isAuthenticated()) {
     console.log(req.isAuthenticated(), "hello my name is mr nbojangles.");
     return next();

@@ -48,7 +48,7 @@ const isAuthenticated = (req, res, next) => {
 export function logIn(req, res, next) {
   Passport.authenticate('local-login', function(err, user, info) {
     if (err) return next(err);
-    if (!user) return res.send({success:false, message:info.message});
+    if (!user) return res.json({success:false, message: "Wrong user details"});
     req.logIn(user, function(err) {
       if (err) return next(err);
       return res.send({ success: true, message: "Login successful.", user });

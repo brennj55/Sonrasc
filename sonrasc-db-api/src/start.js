@@ -51,35 +51,12 @@ router.route('/invoices/:id')
   .get(AuthenicationController.isAuthenticated, InvoiceController.findInvoice);
 
 router.route('/register')
-  .post(function(req, res, next) {
-    Passport.authenticate('local-signup', function(err, user, info) {
-      if (err) { return next(err); }
-      if (!user) { return res.send({success:false, message:info.message}); }
-      req.logIn(user, function(err) {
-        if (err) { return next(err); }
-        return res.send({success:true, message:"register successful.", user:user});
-      });
-    })(req, res, next);
-});
-  //.post(Passport.authenticate('local-signup'), (req, res) => {
-  //  if (res) res.json({ success: true, session: res.sessionID });
-  //});
+  .post(Passport.authenticate('local-signup'), (req, res) => {
+    if (res) res.json({ success: true, user: req.user });
+  });
 
 router.route('/login')
-  .post(function(req, res, next) {
-    Passport.authenticate('local-login', function(err, user, info) {
-      if (err) { return next(err); }
-      if (!user) { return res.send({success:false, message:info.message}); }
-      req.logIn(user, function(err) {
-        if (err) { return next(err); }
-        return res.send({success:true, message:"Login successful.", user:user});
-      });
-    })(req, res, next);
-});
-  // .post(Passport.authenticate('local-login'), (req, res) => {
-  //   console.log(req.user, req.session, 'wtf...');
-  //   if (res) res.json({ success: true, user: req.user });
-  // });
+  .post(AuthenicationController.logIn);
 
 app.use('/api', router);
 app.listen(port);

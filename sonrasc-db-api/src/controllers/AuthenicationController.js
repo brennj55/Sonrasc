@@ -41,14 +41,22 @@ Passport.use('local-login', new LocalStrategy({ passReqToCallback: true },
 ));
 
 const isAuthenticated = (req, res, next) => {
-  console.log(req.session);
-  if (req.isAuthenticated()) {
-    console.log(req.isAuthenticated(), "hello my name is mr nbojangles.");
-    return next();
-  }
-  res.redirect('/');
+  if (req.isAuthenticated()) return next();
+  else res.sendStatus(401);
 };
 
+export function logIn(req, res, next) {
+  Passport.authenticate('local-login', function(err, user, info) {
+    if (err) return next(err);
+    if (!user) return res.send({success:false, message:info.message});
+    req.logIn(user, function(err) {
+      if (err) return next(err);
+      return res.send({ success: true, message: "Login successful.", user });
+    });
+  })(req, res, next);
+}
+
 export default {
-  isAuthenticated
+  isAuthenticated,
+  logIn
 };

@@ -58,6 +58,9 @@ router.route('/register')
 router.route('/login')
   .post(AuthenicationController.logIn);
 
+router.route('/logout')
+  .get(AuthenicationController.logOut);
+
 app.use('/api', router);
 app.listen(port);
 console.log("🌎 Listening for Database API calls.");

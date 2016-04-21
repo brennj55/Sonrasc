@@ -56,7 +56,13 @@ export function logIn(req, res, next) {
   })(req, res, next);
 }
 
+export function logOut(req, res) {
+  req.logout();
+  return res.json({ success: true });
+}
+
 export default {
   isAuthenticated,
-  logIn
+  logIn,
+  logOut
 };

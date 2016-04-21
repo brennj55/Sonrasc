@@ -3,7 +3,8 @@ import Invoice from '../models/Invoice';
 const uploadInvoice = (req, res) => {
   let invoice = new Invoice();
 
-  console.log(req.body.form);
+  invoice.uploadedBy = req.body.user;
+  invoice.businessTo = req.body.businessTo;
   invoice.image = req.body.image;
   invoice.business = req.body.form.business;
   invoice.date = req.body.form.date;
@@ -20,7 +21,8 @@ const uploadInvoice = (req, res) => {
 };
 
 const getInvoices = (req, res) => {
-  Invoice.find((err, invoices) => {
+  console.log(req.user);
+  Invoice.find({ businessTo: req.user.business }, (err, invoices) => {
     if (err) res.send(err);
     res.json(invoices);
   });

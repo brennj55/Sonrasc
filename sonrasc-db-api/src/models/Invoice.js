@@ -9,6 +9,8 @@ const invoiceSchema = new Schema({
   business: { value: {
     type: String, trim: true
   }, boundary: BoundarySchema },
+  uploadedBy: String,
+  businessTo: String,
   date: { value: Date, boundary: BoundarySchema },
   address: { value: String, boundary: BoundarySchema },
   items: [ItemSchema],

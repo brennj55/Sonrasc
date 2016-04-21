@@ -1,7 +1,13 @@
 import User from '../models/User';
 
-const postUsers = function(req, res) {
-
+const getName = (req, res) => {
+  if (!req.body.id) return res.json({ error: 'no id given.' });
+  else return User.findOne({ username: req.body.id })
+     .exec((err, user) => {
+       if (err) res.send(err);
+       else if (req.user.business !== user.business) res.send(err);
+       else res.json({ firstName: user.firstName, lastName: user.lastName });
+    });
 };
 
 const getUsers = (req, res) => {
@@ -12,6 +18,6 @@ const getUsers = (req, res) => {
 };
 
 export default {
-  postUsers,
+  getName,
   getUsers
 };

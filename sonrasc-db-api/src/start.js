@@ -59,7 +59,10 @@ router.route('/login')
   .post(AuthenicationController.logIn);
 
 router.route('/logout')
-  .get(AuthenicationController.logOut);
+  .get(AuthenicationController.isAuthenticated, AuthenicationController.logOut);
+
+router.route('/name')
+  .post(AuthenicationController.isAuthenticated, UserController.getName);
 
 app.use('/api', router);
 app.listen(port);

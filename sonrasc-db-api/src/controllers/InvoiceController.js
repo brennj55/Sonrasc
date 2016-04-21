@@ -3,6 +3,7 @@ import Invoice from '../models/Invoice';
 const uploadInvoice = (req, res) => {
   let invoice = new Invoice();
 
+  console.log(req.body.form);
   invoice.image = req.body.image;
   invoice.business = req.body.form.business;
   invoice.date = req.body.form.date;

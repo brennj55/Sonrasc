@@ -15,8 +15,8 @@ mongoose.connect('mongodb://db:27017/db');
 const app = express();
 
 app.use(cookieParser());
-app.use(bodyParser());
-app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser({limit: '100mb'}));
+app.use(bodyParser.json({ limit: '100mb' }));
 
 app.use(session({ secret: "Sonrascrocks!" }));
 app.use(Passport.initialize());

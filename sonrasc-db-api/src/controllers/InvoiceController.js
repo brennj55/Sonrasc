@@ -13,7 +13,6 @@ const uploadInvoice = (req, res) => {
 
   invoice.save((err) => {
     if (err) res.send(err);
-
     Invoice.insertIntoBusinessesArray(invoice);
     res.json({message: 'Invoice saved to database!', data: invoice});
   });
@@ -31,7 +30,7 @@ const getInvoices = (req, res) => {
 const findInvoice = (req, res) => {
   let id = req.params.id;
 
-  Invoice.findOne({ _id: id }).exec((err, invoices) => {
+  Invoice.findOne({ businessTo: req.user.business, _id: id }).exec((err, invoices) => {
     if (err) res.send(err);
     res.json(invoices);
   });

@@ -1,7 +1,7 @@
 import Business from '../models/Business';
 
 const getBusinesses = (req, res) => {
-  Business.find()
+  Business.find({ customers: { "$in": [req.user.business] } })
     .select('business _id')
     .exec((error, businesses) => {
       if (error) res.send(error);

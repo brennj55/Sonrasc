@@ -4,7 +4,8 @@ let Schema = mongoose.Schema;
 const businessSchema = new Schema({
   business: { value: { type: String, trim: true }},
   address: { value: { type: String, trim: true }},
-  invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }]
+  invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
+  customers: [{ type: Schema.Types.String }]
 });
 
 let Business = mongoose.model('Business', businessSchema);

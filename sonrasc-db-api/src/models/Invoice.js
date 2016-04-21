@@ -25,7 +25,10 @@ invoiceSchema.methods.findAllInvoicesFromBusiness = (cb) => {
 
 invoiceSchema.statics.insertIntoBusinessesArray = (invoice) => {
   let query = { business: invoice.business.value, address: invoice.address.value };
-  let update = { $push: { invoices: invoice._id } };
+  let update = {
+    $push: { invoices: invoice._id },
+    $addToSet: { customers: invoice.businessTo }, 
+  };
   let options = { upsert: true, new: true };
 
   Business.findOneAndUpdate(query, update, options, (err, result) => {

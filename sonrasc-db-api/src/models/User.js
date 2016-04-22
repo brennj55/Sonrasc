@@ -40,10 +40,10 @@ UserSchema.methods.validPassword = function(password) {
 
 UserSchema.statics.createUser = (req, callback) => {
   let user = new User({
-    username: req.body.username,
+    username: req.body.username.toLowerCase(),
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    business: req.body.business,
+    business: req.body.business.toLowerCase(),
     isAdmin: true
   });
 

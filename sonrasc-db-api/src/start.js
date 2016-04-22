@@ -64,6 +64,9 @@ router.route('/logout')
 router.route('/name')
   .post(AuthenicationController.isAuthenticated, UserController.getName);
 
+router.route('/username')
+  .post(UserController.checkIfUsernameAvailable);
+
 app.use('/api', router);
 app.listen(port);
 console.log("🌎 Listening for Database API calls.");

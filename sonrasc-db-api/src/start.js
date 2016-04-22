@@ -40,6 +40,9 @@ app.use(function(req, res, next) {
 router.route('/businesses')
   .get(AuthenicationController.isAuthenticated, BusinessController.getBusinesses);
 
+router.route('/businesses/name')
+  .post(BusinessController.checkIfBusinessAvailable)
+
 router.route('/businesses/:id')
   .get(AuthenicationController.isAuthenticated, BusinessController.getSingleBusiness);
 

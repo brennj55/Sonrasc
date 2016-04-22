@@ -1,4 +1,5 @@
 import Business from '../models/Business';
+import User from '../models/User';
 
 const getBusinesses = (req, res) => {
   Business.find({ customers: { "$in": [req.user.business] } })
@@ -8,6 +9,14 @@ const getBusinesses = (req, res) => {
       res.json({ payload: businesses });
   });
 }
+
+const checkIfBusinessAvailable = (req, res) => {
+  User.findOne({ business: req.body.business}, (err, business) => {
+    if (err) res.json({err});
+    if (!business) res.json({available: true});
+    else res.json({available: false});
+  });
+};
 
 const getSingleBusiness = (req, res) => {
   let id = req.params.id;
@@ -23,5 +32,6 @@ const getSingleBusiness = (req, res) => {
 
 export default {
   getBusinesses,
-  getSingleBusiness
+  getSingleBusiness,
+  checkIfBusinessAvailable
 };

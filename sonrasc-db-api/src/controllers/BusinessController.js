@@ -30,7 +30,20 @@ const getSingleBusiness = (req, res) => {
   });
 };
 
+const getBusinessData = (req, res) => {
+  let id = req.params.id;
+
+  Business.findOne({ _id: id })
+    .populate('invoices')
+    .select('-customers')
+    .exec((error, business) => {
+      if (error) res.send(error);
+      res.json({ business });
+  });
+}
+
 export default {
+  getBusinessData,
   getBusinesses,
   getSingleBusiness,
   checkIfBusinessAvailable

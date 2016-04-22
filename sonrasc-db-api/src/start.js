@@ -46,6 +46,9 @@ router.route('/businesses/name')
 router.route('/businesses/:id')
   .get(AuthenicationController.isAuthenticated, BusinessController.getSingleBusiness);
 
+  router.route('/businesses/data/:id')
+    .get(AuthenicationController.isAuthenticated, BusinessController.getBusinessData);
+
 router.route('/invoices')
   .post(AuthenicationController.isAuthenticated, InvoiceController.uploadInvoice)
   .get(AuthenicationController.isAuthenticated, InvoiceController.getInvoices);

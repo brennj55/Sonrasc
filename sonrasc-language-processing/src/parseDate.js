@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 const parseDate = (date) => {
+  console.log("HELLO CAN YOU SEE ME", date);
   date = date.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\]/gi, '');
   let data = date.split('/');
   console.log(data);

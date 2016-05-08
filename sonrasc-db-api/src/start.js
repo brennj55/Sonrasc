@@ -46,8 +46,8 @@ router.route('/businesses/name')
 router.route('/businesses/:id')
   .get(AuthenicationController.isAuthenticated, BusinessController.getSingleBusiness);
 
-  router.route('/businesses/data/:id')
-    .get(AuthenicationController.isAuthenticated, BusinessController.getBusinessData);
+router.route('/businesses/data/:id')
+  .get(AuthenicationController.isAuthenticated, BusinessController.getBusinessData);
 
 router.route('/invoices')
   .post(AuthenicationController.isAuthenticated, InvoiceController.uploadInvoice)
@@ -55,6 +55,9 @@ router.route('/invoices')
 
 router.route('/invoices/:id')
   .get(AuthenicationController.isAuthenticated, InvoiceController.findInvoice);
+
+router.route('/data/totals')
+  .get(AuthenicationController.isAuthenticated, InvoiceController.getGraphData)
 
 router.route('/register')
   .post(Passport.authenticate('local-signup'), (req, res) => {
@@ -75,4 +78,5 @@ router.route('/username')
 
 app.use('/api', router);
 app.listen(port);
+
 console.log("🌎 Listening for Database API calls.");

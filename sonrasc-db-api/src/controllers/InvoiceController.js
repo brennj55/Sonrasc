@@ -10,6 +10,8 @@ const uploadInvoice = (req, res) => {
   invoice.date = req.body.form.date;
   invoice.address = req.body.form.address;
   invoice.items = req.body.items;
+  //invoice.totalCost = req.body.items.reduce((total, item) => total + item.Total.value);
+  //console.log(invoice.totalCost, '..');
 
   invoice.save((err) => {
     if (err) res.send(err);
@@ -34,11 +36,20 @@ const findInvoice = (req, res) => {
     if (err) res.send(err);
     res.json(invoices);
   });
-
 };
+
+const getGraphData = (req, res) => {
+  Invoice.find({ businessTo: req.user.business })
+    .select('totalCost date')
+    .exec((err, invoices) => {
+      if (err) res.send(err);
+      res.json(invoices);
+    });
+}
 
 export default {
   uploadInvoice,
   getInvoices,
-  findInvoice
+  findInvoice,
+  getGraphData
 };

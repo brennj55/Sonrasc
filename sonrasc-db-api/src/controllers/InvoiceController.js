@@ -1,11 +1,14 @@
 import Invoice from '../models/Invoice';
+const fs = require('fs');
+const ip = require('ip');
+let bcrypt = require('bcrypt-nodejs');
 
 const uploadInvoice = (req, res) => {
   let invoice = new Invoice();
 
   invoice.uploadedBy = req.body.user;
   invoice.businessTo = req.body.businessTo;
-  invoice.image = req.body.image;
+  invoice.image = saveImageSync(req.body.image);
   invoice.business = req.body.form.business;
   invoice.date = req.body.form.date;
   invoice.address = req.body.form.address;
@@ -21,10 +24,30 @@ const uploadInvoice = (req, res) => {
 
 };
 
+const saveImageSync = (imageFromUser) => {
+  let data = imageFromUser.replace(/^data:image\/png;base64,/, '');
+  data = data.replace(/^data:image\/jpeg;base64,/, '');
+  const buffer = new Buffer(data, 'base64');
+  console.log("Writing image...");
+  let file = getHashedFileName();
+  let filename = '/src/images/' + file + '.jpg';
+  fs.writeFileSync(filename, buffer);
+  filename = "http://" + ip.address() + ":9005/api/images/" + file;
+  console.log('heres your filename!', filename);
+  return filename;
+};
+
+const getHashedFileName = () => {
+  let filename = bcrypt.hashSync(Math.random() + ' ' + new Date().toString(), bcrypt.genSaltSync(8), null);
+  filename = filename.replace(/\W/g, '')
+  return filename;
+};
+
 const getInvoices = (req, res) => {
   console.log(req.user);
   Invoice.find({ businessTo: req.user.business }, (err, invoices) => {
     if (err) res.send(err);
+    console.log(invoices);
     res.json(invoices);
   });
 };

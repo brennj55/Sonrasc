@@ -70,6 +70,11 @@ router.route('/login')
 router.route('/logout')
   .get(AuthenicationController.isAuthenticated, AuthenicationController.logOut);
 
+router.route('/images/:id')
+  .get(AuthenicationController.isAuthenticated, (req, res) => {
+    res.sendFile("/src/" + req.params.id + ".jpg");
+  });
+
 router.route('/name')
   .post(AuthenicationController.isAuthenticated, UserController.getName);
 

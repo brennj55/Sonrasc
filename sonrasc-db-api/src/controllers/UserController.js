@@ -12,7 +12,6 @@ const getName = (req, res) => {
 
 const checkIfUsernameAvailable = (req, res) => {
   User.findOne({ username: req.body.username }, (err, user) => {
-    console.log(err, user);
     if (err) res.send(err);
     if (!user) res.json({available: true});
     else res.json({available: false});

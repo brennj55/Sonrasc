@@ -8,7 +8,6 @@ Passport.serializeUser(function(user, done) {
 
   // used to deserialize the user
 Passport.deserializeUser(function(id, done) {
-  console.log(id, "in id of deserails a user");
   User.findById(id, function(err, user) {
     done(err, user);
   });

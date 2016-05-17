@@ -73,7 +73,6 @@ router.route('/logout')
 
 router.route('/images/:id')
   .get(AuthenicationController.isAuthenticated, (req, res) => {
-    console.log(fs.readdirSync('/src/images'));
     res.sendFile('/src/images/' + req.params.id + ".jpg");
   });
 

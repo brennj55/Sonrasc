@@ -14,17 +14,25 @@ const uploadInvoice = (req, res) => {
   invoice.date = req.body.form.date;
   invoice.address = req.body.form.address;
   invoice.items = req.body.items;
-  //invoice.totalCost = req.body.items.reduce((total, item) => total + item.Total.value);
-  //console.log(invoice.totalCost, '..');
+
+  let total = 0;
+  req.body.items.map(item => {
+    total += item.Total.value;
+  });
+  invoice.totalCost = total;
+
+
+  console.log(invoice.totalCost, '..');
 
   saveImage(req.body.image, req.hostname, invoice, () => {
     console.log(invoice);
     invoice.save((err) => {
-      if (err) res.send(err);
+      if (err) res.json({ message: "Error saving to database.", data: null });
+      else {
         Invoice.insertIntoBusinessesArray(invoice);
         res.json({message: 'Invoice saved to database!', data: invoice});
       }
-    );
+    });
   });
 };
 
@@ -52,9 +60,8 @@ const getHashedFileName = () => {
 const getInvoices = (req, res) => {
   console.log(req.user);
   Invoice.find({ businessTo: req.user.business }, (err, invoices) => {
-    if (err) res.send(err);
-    console.log(invoices);
-    res.json(invoices);
+    if (err) res.json({error: err});
+    else res.json(invoices);
   });
 };
 
@@ -62,8 +69,8 @@ const findInvoice = (req, res) => {
   let id = req.params.id;
 
   Invoice.findOne({ businessTo: req.user.business, _id: id }).exec((err, invoices) => {
-    if (err) res.send(err);
-    res.json(invoices);
+    if (err) res.json({error: err});
+    else res.json(invoices);
   });
 };
 
@@ -71,8 +78,11 @@ const getGraphData = (req, res) => {
   Invoice.find({ businessTo: req.user.business })
     .select('totalCost date')
     .exec((err, invoices) => {
-      if (err) res.send(err);
-      res.json(invoices);
+      if (err) res.json({error: err});
+      else {
+        let data = invoices.map(invoice => { return { x: new Date(invoice.date.value).getTime(), y: invoice.totalCost }});
+        res.json(data);
+      }
     });
 }
 

@@ -1,6 +1,8 @@
 import Invoice from '../models/Invoice';
 const fs = require('fs');
 const ip = require('ip');
+const Q = require('q');
+const fsWriteFile = Q.denodeify(fs.writeFile);
 let bcrypt = require('bcrypt-nodejs');
 
 const uploadInvoice = (req, res) => {
@@ -8,7 +10,6 @@ const uploadInvoice = (req, res) => {
 
   invoice.uploadedBy = req.body.user;
   invoice.businessTo = req.body.businessTo;
-  invoice.image = saveImageSync(req.body.image);
   invoice.business = req.body.form.business;
   invoice.date = req.body.form.date;
   invoice.address = req.body.form.address;
@@ -16,25 +17,30 @@ const uploadInvoice = (req, res) => {
   //invoice.totalCost = req.body.items.reduce((total, item) => total + item.Total.value);
   //console.log(invoice.totalCost, '..');
 
-  invoice.save((err) => {
-    if (err) res.send(err);
-    Invoice.insertIntoBusinessesArray(invoice);
-    res.json({message: 'Invoice saved to database!', data: invoice});
+  saveImage(req.body.image, req.hostname, invoice, () => {
+    console.log(invoice);
+    invoice.save((err) => {
+      if (err) res.send(err);
+        Invoice.insertIntoBusinessesArray(invoice);
+        res.json({message: 'Invoice saved to database!', data: invoice});
+      }
+    );
   });
-
 };
 
-const saveImageSync = (imageFromUser) => {
+const saveImage = (imageFromUser, url, invoice, callback) => {
   let data = imageFromUser.replace(/^data:image\/png;base64,/, '');
   data = data.replace(/^data:image\/jpeg;base64,/, '');
   const buffer = new Buffer(data, 'base64');
   console.log("Writing image...");
   let file = getHashedFileName();
   let filename = '/src/images/' + file + '.jpg';
-  fs.writeFileSync(filename, buffer);
-  filename = "http://" + ip.address() + ":9005/api/images/" + file;
-  console.log('heres your filename!', filename);
-  return filename;
+  fs.writeFile(filename, buffer, (err) => {
+    if (err) throw err;
+    console.log('how did i get hereeee.');
+    invoice.image = "http://" + url + ":7004/api/images/" + file;
+    callback();
+  })
 };
 
 const getHashedFileName = () => {

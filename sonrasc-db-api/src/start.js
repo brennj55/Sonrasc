@@ -1,4 +1,5 @@
 import express from 'express';
+const fs = require('fs');
 import Passport from 'passport';
 import BusinessController from './controllers/BusinessController';
 import InvoiceController from './controllers/InvoiceController';
@@ -72,7 +73,8 @@ router.route('/logout')
 
 router.route('/images/:id')
   .get(AuthenicationController.isAuthenticated, (req, res) => {
-    res.sendFile("/src/" + req.params.id + ".jpg");
+    console.log(fs.readdirSync('/src/images'));
+    res.sendFile('/src/images/' + req.params.id + ".jpg");
   });
 
 router.route('/name')

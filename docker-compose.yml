@@ -2,6 +2,14 @@
 #      OCR Microservices       #
 ################################
 
+nginx:
+    build: ./sonrasc-nginx-proxy
+    dockerfile: Dockerfile
+    links:
+        - web-front:web-front
+    ports:
+        - "80:80"
+
 # Start messaging broker
 rabbitmq:
   build: ./sonrasc-image-processing/
@@ -54,7 +62,7 @@ web-front:
   links:
     - web-ocr-api
     - db-api
-  command: "npm run start"
+  command: "npm run serve"
 
 web-ocr-api:
   build: ./sonrasc-ocr-api/

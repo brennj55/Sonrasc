@@ -76,11 +76,15 @@ const findInvoice = (req, res) => {
 
 const getGraphData = (req, res) => {
   Invoice.find({ businessTo: req.user.business })
-    .select('totalCost date')
+    .select('totalCost date business')
     .exec((err, invoices) => {
       if (err) res.json({error: err});
       else {
-        let data = invoices.map(invoice => { return { x: new Date(invoice.date.value).getTime(), y: invoice.totalCost }});
+        let data = invoices.map(invoice => { return {
+          x: new Date(invoice.date.value).getTime(),
+          y: invoice.totalCost,
+          business: invoice.business
+        }});
         res.json(data);
       }
     });

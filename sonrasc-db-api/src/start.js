@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(bodyParser({limit: '100mb'}));
 app.use(bodyParser.json({ limit: '100mb' }));
 
-app.use(session({ secret: "Sonrascrocks!" }));
+app.use(session({ secret: "Sonrascrocks!", cookie: { httpOnly: false } }));
 app.use(Passport.initialize());
 app.use(Passport.session());
 

@@ -62,7 +62,7 @@ web-front:
   links:
     - web-ocr-api
     - db-api
-  command: "npm run serve"
+  command: "npm run start"
 
 web-ocr-api:
   build: ./sonrasc-ocr-api/

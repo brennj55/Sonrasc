@@ -64,6 +64,9 @@ router.route('/invoices/:id')
 router.route('/data/totals')
   .get(AuthenicationController.isAuthenticated, InvoiceController.getGraphData)
 
+router.route('/data/businessTotals')
+  .get(AuthenicationController.isAuthenticated, BusinessController.getTotalBusinessSpending)
+
 router.route('/register')
   .post(Passport.authenticate('local-signup'), (req, res) => {
     if (res) res.json({ success: true, user: req.user });

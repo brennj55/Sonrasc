@@ -28,7 +28,7 @@ let router = express.Router();
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);
-  var allowedOrigins = ['http://192.168.99.100:8080', 'http://192.168.99.100'];
+  var allowedOrigins = ['http://192.168.99.100:8080', 'http://192.168.99.100', 'http://139.59.176.15'];
   var origin = req.headers.origin;
   if(allowedOrigins.indexOf(origin) > -1){
       res.setHeader('Access-Control-Allow-Origin', origin);

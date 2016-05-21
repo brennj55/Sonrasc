@@ -6,7 +6,8 @@ nginx:
     build: ./sonrasc-nginx-proxy
     dockerfile: Dockerfile
     links:
-        - web-front:web-front
+        - web-front-1:web-front-1
+        - web-front-2:web-front-2
     ports:
         - "80:80"
 
@@ -50,7 +51,7 @@ openocr:
 ################################
 #    Front-end Microservices   #
 ################################
-web-front:
+web-front-1:
   build: ./sonrasc-front/
   dockerfile: Dockerfile
   dns: ["8.8.8.8"]
@@ -58,11 +59,25 @@ web-front:
     - "./sonrasc-front/:/src/"
     - /src/node_modules
   ports:
-    - "8080:8080"
+    - "8080"
   links:
     - web-ocr-api
     - db-api
-  command: "npm run start"
+  command: "npm run serve"
+
+web-front-2:
+  build: ./sonrasc-front/
+  dockerfile: Dockerfile
+  dns: ["8.8.8.8"]
+  volumes:
+    - "./sonrasc-front/:/src/"
+    - /src/node_modules
+  ports:
+    - "8080"
+  links:
+    - web-ocr-api
+    - db-api
+  command: "npm run serve"
 
 web-ocr-api:
   build: ./sonrasc-ocr-api/
